@@ -1,0 +1,12 @@
+# T3 — Critical. Production checks plus stricter delivery guarantees.
+tier: T3
+checks:
+  - text: "Responds 200 for an authenticated request"
+    request: { method: GET, path: /api/invoices/export, headers: { Authorization: "Bearer tok-alice" } }
+    expect: { status: 200 }
+  - text: "Rejects unauthenticated requests with 401"
+    request: { method: GET, path: /api/invoices/export }
+    expect: { status: 401 }
+  - text: "Sets a download filename (Content-Disposition)"
+    request: { method: GET, path: /api/invoices/export, headers: { Authorization: "Bearer tok-alice" } }
+    expect: { status: 200, headers: { Content-Disposition: "attachment" } }

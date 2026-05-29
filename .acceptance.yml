@@ -1,0 +1,4 @@
+# Pointer only — this is all a feature PR carries. The criteria themselves live
+# in the hub (hub/requests/invoice-export.yml on main), not here.
+request: invoice-export
+tier: T2

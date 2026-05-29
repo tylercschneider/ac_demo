@@ -1,50 +1,101 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Acceptance runner. Reads acceptance/spec.yml, runs the test mapped to each
-# "testable" criterion, flags "fuzzy" ones for judged review, prints a markdown
-# breakdown, writes acceptance-result.json, and exits non-zero if any testable
-# criterion is unmet — so it gates the PR like any other CI check.
+# Generic acceptance runner.
+#
+# Reads a tiny pointer (.acceptance.yml: which request + which finish tier),
+# then runs two layers of DECLARATIVE checks against the booted app:
+#   - Finish level: finish/<tier>.yml (reusable per-tier rubric checks)
+#   - Acceptance:   the request's criteria, fetched from the hub (origin/main),
+#                   NOT committed to this PR
+# Checks are data, not test files — each is an HTTP request + expectations the
+# runner interprets. Exits non-zero if any testable check is unmet (gates the PR).
 require "yaml"
 require "json"
 
-root = File.expand_path("..", __dir__)
-spec = YAML.load_file(File.join(root, "acceptance", "spec.yml"))
+ROOT = File.expand_path("..", __dir__)
 
-results = spec["criteria"].map do |c|
-  if c["kind"] == "fuzzy"
-    next c.merge("status" => "judged", "detail" => "Needs judged review — not gating.")
-  end
+def load_yaml(str) = YAML.safe_load(str, aliases: true) || {}
 
-  cmd = ["bin/rails", "test", c["test"]]
-  cmd += ["-n", c["name"]] if c["name"]
-  output = IO.popen({ "RAILS_ENV" => "test" }, cmd, chdir: root, err: [:child, :out], &:read)
-  ok = $?.success?
-  detail = ok ? "test passed" : (output[/\d+\) Failure:.*?\n(.*?)\n/m, 1] || output[/\d+\) Error:.*?\n(.*?)\n/m, 1] || "test failed").to_s.strip
-  c.merge("status" => ok ? "met" : "unmet", "detail" => detail[0, 120])
+pointer_path = File.join(ROOT, ".acceptance.yml")
+unless File.exist?(pointer_path)
+  puts "No .acceptance.yml in this branch — nothing to verify."
+  exit 0
+end
+pointer = load_yaml(File.read(pointer_path))
+request_id = pointer.fetch("request")
+tier = pointer.fetch("tier")
+
+# Acceptance criteria live in the hub (main), not in this PR. Prefer origin/main;
+# fall back to the local copy for offline runs.
+hub_raw = `git show origin/main:hub/requests/#{request_id}.yml 2>/dev/null`
+if hub_raw.strip.empty?
+  local = File.join(ROOT, "hub", "requests", "#{request_id}.yml")
+  hub_raw = File.exist?(local) ? File.read(local) : ""
+end
+abort "No criteria found for request '#{request_id}'." if hub_raw.strip.empty?
+
+ac_checks = load_yaml(hub_raw).fetch("checks", [])
+finish_path = File.join(ROOT, "finish", "#{tier}.yml")
+finish_checks = File.exist?(finish_path) ? load_yaml(File.read(finish_path)).fetch("checks", []) : []
+
+ENV["RAILS_ENV"] = "test"
+require File.join(ROOT, "config", "environment")
+require "rack/mock"
+
+def header(res, name)
+  res.headers.find { |k, _| k.downcase == name.downcase }&.last.to_s
 end
 
-gating = results.select { |r| r["kind"] == "testable" }
-met = gating.count { |r| r["status"] == "met" }
-all_met = met == gating.size
+def evaluate(expect, res)
+  expect ||= {}
+  body = res.body.to_s
+  lines = body.split("\n")
+  fails = []
+  fails << "expected status #{expect['status']}, got #{res.status}" if expect["status"] && res.status != expect["status"]
+  if (p = expect["content_type_prefix"]) && !header(res, "content-type").start_with?(p)
+    fails << "content-type '#{header(res, 'content-type')}' should start with '#{p}'"
+  end
+  fails << "first line is '#{lines.first}'" if expect["body_first_line"] && lines.first != expect["body_first_line"]
+  Array(expect["body_excludes"]).each { |s| fails << "body must not contain #{s}" if body.include?(s) }
+  Array(expect["body_includes"]).each { |s| fails << "body must contain #{s}" unless body.include?(s) }
+  if (n = expect["body_data_rows"]) && (lines.size - 1) != n
+    fails << "expected #{n} data rows, got #{lines.size - 1}"
+  end
+  (expect["headers"] || {}).each { |h, sub| fails << "header #{h} missing '#{sub}'" unless header(res, h).include?(sub) }
+  fails
+end
+
+def run_check(c)
+  return { "text" => c["text"], "kind" => "fuzzy", "status" => "judged", "detail" => "judged review — not gating" } if c["kind"] == "fuzzy"
+
+  req = c["request"] || {}
+  env = { "HTTP_HOST" => "127.0.0.1" }
+  (req["headers"] || {}).each { |k, v| env["HTTP_#{k.upcase.tr('-', '_')}"] = v.to_s }
+  res = Rack::MockRequest.new(Rails.application).public_send((req["method"] || "GET").downcase, req["path"], env)
+  fails = evaluate(c["expect"], res)
+  { "text" => c["text"], "kind" => "testable", "status" => fails.empty? ? "met" : "unmet", "detail" => fails.first || "ok" }
+end
+
+sections = {
+  "Finish level — #{tier}" => finish_checks.map { |c| run_check(c) },
+  "Acceptance — #{request_id}" => ac_checks.map { |c| run_check(c) }
+}
 
 icon = ->(s) { { "met" => "✅", "unmet" => "❌" }.fetch(s, "🔵") }
-lines = [
-  "## Acceptance — #{spec['request']} (#{spec['tier']})",
-  "",
-  "**#{met}/#{gating.size} testable criteria met#{all_met ? '' : ' — blocking'}**",
-  "",
-  "| | Criterion | How | Detail |",
-  "|---|---|---|---|",
-  *results.map { |r| "| #{icon.call(r['status'])} | #{r['text']} | #{r['kind'] == 'testable' ? 'CI test' : 'Judged'} | #{r['detail']} |" }
-]
-md = lines.join("\n")
+gating_fail = false
+md = +""
+sections.each do |title, results|
+  gate = results.select { |r| r["kind"] == "testable" }
+  met = gate.count { |r| r["status"] == "met" }
+  gating_fail = true if met != gate.size
+  md << "## #{title}\n\n**#{met}/#{gate.size} met#{met == gate.size ? '' : ' — blocking'}**\n\n"
+  md << "| | Check | Detail |\n|---|---|---|\n"
+  results.each { |r| md << "| #{icon.call(r['status'])} | #{r['text']} | #{r['detail']} |\n" }
+  md << "\n"
+end
 
-File.write(File.join(root, "acceptance-result.json"), JSON.pretty_generate(
-  "request" => spec["request"], "tier" => spec["tier"],
-  "met" => met, "total" => gating.size, "all_met" => all_met, "results" => results
-))
+File.write(File.join(ROOT, "acceptance-result.json"), JSON.pretty_generate("tier" => tier, "request" => request_id, "sections" => sections))
 puts md
-File.write(ENV["GITHUB_STEP_SUMMARY"], md + "\n", mode: "a") if ENV["GITHUB_STEP_SUMMARY"]
-
-exit(all_met ? 0 : 1)
+File.write(ENV["GITHUB_STEP_SUMMARY"], md, mode: "a") if ENV["GITHUB_STEP_SUMMARY"]
+exit(gating_fail ? 1 : 0)

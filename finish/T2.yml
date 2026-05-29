@@ -1,0 +1,9 @@
+# T2 — Production. Responds, and protected endpoints enforce auth.
+tier: T2
+checks:
+  - text: "Responds 200 for an authenticated request"
+    request: { method: GET, path: /api/invoices/export, headers: { Authorization: "Bearer tok-alice" } }
+    expect: { status: 200 }
+  - text: "Rejects unauthenticated requests with 401"
+    request: { method: GET, path: /api/invoices/export }
+    expect: { status: 401 }

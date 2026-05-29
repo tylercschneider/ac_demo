@@ -1,0 +1,6 @@
+# T1 — Prototype. Smoke only: it runs.
+tier: T1
+checks:
+  - text: "Endpoint responds without a server error (smoke)"
+    request: { method: GET, path: /api/invoices/export, headers: { Authorization: "Bearer tok-alice" } }
+    expect: { status: 200 }
