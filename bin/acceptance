@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Acceptance runner. Reads acceptance/spec.yml, runs the test mapped to each
+# "testable" criterion, flags "fuzzy" ones for judged review, prints a markdown
+# breakdown, writes acceptance-result.json, and exits non-zero if any testable
+# criterion is unmet — so it gates the PR like any other CI check.
+require "yaml"
+require "json"
+
+root = File.expand_path("..", __dir__)
+spec = YAML.load_file(File.join(root, "acceptance", "spec.yml"))
+
+results = spec["criteria"].map do |c|
+  if c["kind"] == "fuzzy"
+    next c.merge("status" => "judged", "detail" => "Needs judged review — not gating.")
+  end
+
+  cmd = ["bin/rails", "test", c["test"]]
+  cmd += ["-n", c["name"]] if c["name"]
+  output = IO.popen({ "RAILS_ENV" => "test" }, cmd, chdir: root, err: [:child, :out], &:read)
+  ok = $?.success?
+  detail = ok ? "test passed" : (output[/\d+\) Failure:.*?\n(.*?)\n/m, 1] || output[/\d+\) Error:.*?\n(.*?)\n/m, 1] || "test failed").to_s.strip
+  c.merge("status" => ok ? "met" : "unmet", "detail" => detail[0, 120])
+end
+
+gating = results.select { |r| r["kind"] == "testable" }
+met = gating.count { |r| r["status"] == "met" }
+all_met = met == gating.size
+
+icon = ->(s) { { "met" => "✅", "unmet" => "❌" }.fetch(s, "🔵") }
+lines = [
+  "## Acceptance — #{spec['request']} (#{spec['tier']})",
+  "",
+  "**#{met}/#{gating.size} testable criteria met#{all_met ? '' : ' — blocking'}**",
+  "",
+  "| | Criterion | How | Detail |",
+  "|---|---|---|---|",
+  *results.map { |r| "| #{icon.call(r['status'])} | #{r['text']} | #{r['kind'] == 'testable' ? 'CI test' : 'Judged'} | #{r['detail']} |" }
+]
+md = lines.join("\n")
+
+File.write(File.join(root, "acceptance-result.json"), JSON.pretty_generate(
+  "request" => spec["request"], "tier" => spec["tier"],
+  "met" => met, "total" => gating.size, "all_met" => all_met, "results" => results
+))
+puts md
+File.write(ENV["GITHUB_STEP_SUMMARY"], md + "\n", mode: "a") if ENV["GITHUB_STEP_SUMMARY"]
+
+exit(all_met ? 0 : 1)

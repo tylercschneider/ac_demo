@@ -1,0 +1,7 @@
+alice:
+  name: Alice
+  api_token: tok-alice
+
+bob:
+  name: Bob
+  api_token: tok-bob

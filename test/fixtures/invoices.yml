@@ -1,0 +1,20 @@
+alice_one:
+  user: alice
+  invoice_id: INV-1001
+  date: "2026-01-05"
+  amount: "120.00"
+  status: paid
+
+alice_two:
+  user: alice
+  invoice_id: INV-1002
+  date: "2026-02-05"
+  amount: "120.00"
+  status: paid
+
+bob_one:
+  user: bob
+  invoice_id: INV-2001
+  date: "2026-01-09"
+  amount: "90.00"
+  status: open

@@ -1,0 +1,46 @@
+name: Acceptance
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Prepare test database
+        run: bin/rails db:test:prepare
+
+      # Exits non-zero if a testable criterion fails → the check goes red and
+      # the PR is blocked. This is the gate that makes "fulfilled" objective.
+      - name: Run acceptance criteria
+        run: bin/acceptance
+
+      # Always post/update a single results comment on the PR, pass or fail.
+      - name: Comment results on the PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const r = JSON.parse(fs.readFileSync('acceptance-result.json', 'utf8'));
+            const icon = (s) => (s === 'met' ? '✅' : s === 'unmet' ? '❌' : '🔵');
+            const rows = r.results
+              .map((x) => `| ${icon(x.status)} | ${x.text} | ${x.kind === 'testable' ? 'CI test' : 'Judged'} |`)
+              .join('\n');
+            const body = `## Acceptance — ${r.request} (${r.tier})\n\n`
+              + `**${r.met}/${r.total} testable criteria met${r.all_met ? '' : ' — blocking'}**\n\n`
+              + `| | Criterion | How |\n|---|---|---|\n${rows}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo, issue_number: context.issue.number,
+            });
+            const mine = comments.find((c) => c.body.startsWith('## Acceptance —'));
+            if (mine) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: mine.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+            }
