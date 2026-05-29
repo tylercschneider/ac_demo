@@ -1,31 +1,9 @@
 class InvoicesController < ApplicationController
-  before_action :require_auth
-
   # GET /api/invoices/export
-  # Returns the authenticated user's invoices as CSV.
-  # CSV contract: header "invoice_id,date,amount,status", one row per invoice.
   def export
-    invoices = @current_user.invoices.order(:invoice_id)
+    invoices = Invoice.order(:invoice_id) # BUG: every user's invoices, and no auth
     header = "invoice_id,date,amount,status"
-    rows = invoices.map do |i|
-      [i.invoice_id, i.date, i.amount, i.status].map { |v| csv_escape(v) }.join(",")
-    end
-    send_data ([header] + rows).join("\n"),
-              type: "text/csv; charset=utf-8",
-              disposition: 'attachment; filename="invoices.csv"',
-              status: :ok
-  end
-
-  private
-
-  def require_auth
-    token = request.headers["Authorization"].to_s[/\ABearer (.+)\z/, 1]
-    @current_user = User.find_by(api_token: token) if token
-    head :unauthorized unless @current_user
-  end
-
-  def csv_escape(value)
-    s = value.to_s
-    s.match?(/[",\n]/) ? %("#{s.gsub('"', '""')}") : s
+    rows = invoices.map { |i| [i.invoice_id, i.date, i.amount, i.status].join(",") }
+    send_data ([header] + rows).join("\n"), type: "text/csv", status: :ok
   end
 end
