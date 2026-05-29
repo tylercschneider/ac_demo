@@ -106,3 +106,139 @@ Processing by InvoicesController#export as HTML
 Filter chain halted as :require_auth rendered or redirected
 Completed 401 Unauthorized in 5ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "invoices";
+DELETE FROM "users";
+INSERT INTO "invoices" ("id", "amount", "created_at", "date", "invoice_id", "status", "updated_at", "user_id") VALUES (1032517720, '120.00', '2026-05-29 21:51:31.507799', '2026-01-05', 'INV-1001', 'paid', '2026-05-29 21:51:31.507799', 663665735), (372044996, '120.00', '2026-05-29 21:51:31.507799', '2026-02-05', 'INV-1002', 'paid', '2026-05-29 21:51:31.507799', 663665735), (223763209, '90.00', '2026-05-29 21:51:31.507799', '2026-01-09', 'INV-2001', 'open', '2026-05-29 21:51:31.507799', 902541635);
+INSERT INTO "users" ("id", "api_token", "created_at", "name", "updated_at") VALUES (663665735, 'tok-alice', '2026-05-29 21:51:31.508512', 'Alice', '2026-05-29 21:51:31.508512'), (902541635, 'tok-bob', '2026-05-29 21:51:31.508512', 'Bob', '2026-05-29 21:51:31.508512')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------
+InvoicesExportTest: test_ac_1_status_and_content_type
+-----------------------------------------------------
+Started GET "/api/invoices/export" for 127.0.0.1 at 2026-05-29 17:51:31 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.1ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 663665735]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (1.5ms)
+Completed 200 OK in 15ms (Views: 1.2ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.2ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "invoices";
+DELETE FROM "users";
+INSERT INTO "invoices" ("id", "amount", "created_at", "date", "invoice_id", "status", "updated_at", "user_id") VALUES (1032517720, '120.00', '2026-05-29 21:51:32.170418', '2026-01-05', 'INV-1001', 'paid', '2026-05-29 21:51:32.170418', 663665735), (372044996, '120.00', '2026-05-29 21:51:32.170418', '2026-02-05', 'INV-1002', 'paid', '2026-05-29 21:51:32.170418', 663665735), (223763209, '90.00', '2026-05-29 21:51:32.170418', '2026-01-09', 'INV-2001', 'open', '2026-05-29 21:51:32.170418', 902541635);
+INSERT INTO "users" ("id", "api_token", "created_at", "name", "updated_at") VALUES (663665735, 'tok-alice', '2026-05-29 21:51:32.171258', 'Alice', '2026-05-29 21:51:32.171258'), (902541635, 'tok-bob', '2026-05-29 21:51:32.171258', 'Bob', '2026-05-29 21:51:32.171258')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------
+InvoicesExportTest: test_ac_2_csv_header
+----------------------------------------
+Started GET "/api/invoices/export" for 127.0.0.1 at 2026-05-29 17:51:32 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.1ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 663665735]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (1.6ms)
+Completed 200 OK in 15ms (Views: 1.3ms | ActiveRecord: 0.2ms (2 queries, 0 cached) | GC: 0.1ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "invoices";
+DELETE FROM "users";
+INSERT INTO "invoices" ("id", "amount", "created_at", "date", "invoice_id", "status", "updated_at", "user_id") VALUES (1032517720, '120.00', '2026-05-29 21:51:32.858214', '2026-01-05', 'INV-1001', 'paid', '2026-05-29 21:51:32.858214', 663665735), (372044996, '120.00', '2026-05-29 21:51:32.858214', '2026-02-05', 'INV-1002', 'paid', '2026-05-29 21:51:32.858214', 663665735), (223763209, '90.00', '2026-05-29 21:51:32.858214', '2026-01-09', 'INV-2001', 'open', '2026-05-29 21:51:32.858214', 902541635);
+INSERT INTO "users" ("id", "api_token", "created_at", "name", "updated_at") VALUES (663665735, 'tok-alice', '2026-05-29 21:51:32.858919', 'Alice', '2026-05-29 21:51:32.858919'), (902541635, 'tok-bob', '2026-05-29 21:51:32.858919', 'Bob', '2026-05-29 21:51:32.858919')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+InvoicesExportTest: test_ac_3_user_scoping
+------------------------------------------
+Started GET "/api/invoices/export" for 127.0.0.1 at 2026-05-29 17:51:32 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.1ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 663665735]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (1.5ms)
+Completed 200 OK in 14ms (Views: 1.2ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.2ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "invoices";
+DELETE FROM "users";
+INSERT INTO "invoices" ("id", "amount", "created_at", "date", "invoice_id", "status", "updated_at", "user_id") VALUES (1032517720, '120.00', '2026-05-29 21:51:33.520129', '2026-01-05', 'INV-1001', 'paid', '2026-05-29 21:51:33.520129', 663665735), (372044996, '120.00', '2026-05-29 21:51:33.520129', '2026-02-05', 'INV-1002', 'paid', '2026-05-29 21:51:33.520129', 663665735), (223763209, '90.00', '2026-05-29 21:51:33.520129', '2026-01-09', 'INV-2001', 'open', '2026-05-29 21:51:33.520129', 902541635);
+INSERT INTO "users" ("id", "api_token", "created_at", "name", "updated_at") VALUES (663665735, 'tok-alice', '2026-05-29 21:51:33.520903', 'Alice', '2026-05-29 21:51:33.520903'), (902541635, 'tok-bob', '2026-05-29 21:51:33.520903', 'Bob', '2026-05-29 21:51:33.520903')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+InvoicesExportTest: test_ac_4_unauthenticated_401
+-------------------------------------------------
+Started GET "/api/invoices/export" for 127.0.0.1 at 2026-05-29 17:51:33 -0400
+Processing by InvoicesController#export as HTML
+Filter chain halted as :require_auth rendered or redirected
+Completed 401 Unauthorized in 5ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "invoices";
+DELETE FROM "users";
+INSERT INTO "invoices" ("id", "amount", "created_at", "date", "invoice_id", "status", "updated_at", "user_id") VALUES (1032517720, '120.00', '2026-05-29 21:51:34.185952', '2026-01-05', 'INV-1001', 'paid', '2026-05-29 21:51:34.185952', 663665735), (372044996, '120.00', '2026-05-29 21:51:34.185952', '2026-02-05', 'INV-1002', 'paid', '2026-05-29 21:51:34.185952', 663665735), (223763209, '90.00', '2026-05-29 21:51:34.185952', '2026-01-09', 'INV-2001', 'open', '2026-05-29 21:51:34.185952', 902541635);
+INSERT INTO "users" ("id", "api_token", "created_at", "name", "updated_at") VALUES (663665735, 'tok-alice', '2026-05-29 21:51:34.186841', 'Alice', '2026-05-29 21:51:34.186841'), (902541635, 'tok-bob', '2026-05-29 21:51:34.186841', 'Bob', '2026-05-29 21:51:34.186841')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------
+InvoicesExportTest: test_ac_6_sorted_by_invoice_id
+--------------------------------------------------
+Started GET "/api/invoices/export" for 127.0.0.1 at 2026-05-29 17:51:34 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.1ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 663665735]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (1.4ms)
+Completed 200 OK in 14ms (Views: 1.1ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.1ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m

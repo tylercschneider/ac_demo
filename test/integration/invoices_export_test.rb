@@ -31,4 +31,11 @@ class InvoicesExportTest < ActionDispatch::IntegrationTest
     get "/api/invoices/export"
     assert_response :unauthorized
   end
+
+  # ac-6 (added by this PR's request)
+  def test_ac_6_sorted_by_invoice_id
+    get "/api/invoices/export", headers: AUTH
+    ids = response.body.lines.drop(1).map { |row| row.split(",").first }
+    assert_equal ids.sort, ids, "rows must be sorted by invoice_id ascending"
+  end
 end

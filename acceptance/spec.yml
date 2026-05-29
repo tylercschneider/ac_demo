@@ -24,6 +24,11 @@ criteria:
     kind: testable
     test: test/integration/invoices_export_test.rb
     name: test_ac_4_unauthenticated_401
+  - id: ac-6
+    text: "CSV rows are sorted by invoice_id ascending"
+    kind: testable
+    test: test/integration/invoices_export_test.rb
+    name: test_ac_6_sorted_by_invoice_id
   - id: ac-5
     text: "Error messages shown to the user are clear and human-readable"
     kind: fuzzy
