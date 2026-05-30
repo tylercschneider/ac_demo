@@ -290,3 +290,99 @@ Started GET "/api/invoices/export" for  at 2026-05-29 22:52:48 -0400
 Processing by InvoicesController#export as HTML
 Filter chain halted as :require_auth rendered or redirected
 Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.1ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (1.5ms)
+Completed 200 OK in 37ms (Views: 1.2ms | ActiveRecord: 2.8ms (2 queries, 0 cached) | GC: 3.3ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+Filter chain halted as :require_auth rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 0ms (Views: 0.1ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 0ms (Views: 0.1ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 0ms (Views: 0.1ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+Filter chain halted as :require_auth rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 12:47:10 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 0ms (Views: 0.1ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (1.9ms)
+Completed 200 OK in 43ms (Views: 1.6ms | ActiveRecord: 2.4ms (2 queries, 0 cached) | GC: 3.9ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+Filter chain halted as :require_auth rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 1ms (Views: 0.1ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 0ms (Views: 0.1ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.1ms)
+Completed 200 OK in 0ms (Views: 0.1ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+Filter chain halted as :require_auth rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+Started GET "/api/invoices/export" for  at 2026-05-30 14:32:22 -0400
+Processing by InvoicesController#export as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."api_token" = ? LIMIT ?[0m  [["api_token", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mInvoice Load (0.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."user_id" = ? ORDER BY "invoices"."invoice_id" ASC[0m  [["user_id", 1]]
+  Rendering text template
+  Rendered text template (Duration: 0.0ms | GC: 0.0ms)
+Sent data  (0.2ms)
+Completed 200 OK in 1ms (Views: 0.1ms | ActiveRecord: 0.0ms (2 queries, 0 cached) | GC: 0.2ms)
