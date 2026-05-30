@@ -24,19 +24,20 @@ unless File.exist?(pointer_path)
   exit 0
 end
 pointer = load_yaml(File.read(pointer_path))
-request_id = pointer.fetch("request")
-tier = pointer.fetch("tier")
+issue = pointer.fetch("issue")
 
-# Acceptance criteria live in the hub (main), not in this PR. Prefer origin/main;
-# fall back to the local copy for offline runs.
-hub_raw = `git show origin/main:hub/requests/#{request_id}.yml 2>/dev/null`
-if hub_raw.strip.empty?
-  local = File.join(ROOT, "hub", "requests", "#{request_id}.yml")
-  hub_raw = File.exist?(local) ? File.read(local) : ""
-end
-abort "No criteria found for request '#{request_id}'." if hub_raw.strip.empty?
+# The acceptance criteria live in the request ticket — a GitHub Issue — NOT in
+# this PR. Fetch the issue body and extract its ```acceptance``` block.
+# (Uses `gh`; in CI set GH_TOKEN. Locally, your gh auth is used.)
+request_id = "issue ##{issue}"
+body = `gh issue view #{issue} --json body --jq .body 2>/dev/null`
+abort "Could not read issue ##{issue} — is gh authenticated / GH_TOKEN set?" if body.strip.empty?
+block = body[/```acceptance\s*\n(.*?)\n```/m, 1]
+abort "Issue ##{issue} has no ```acceptance``` block." if block.nil?
 
-ac_checks = load_yaml(hub_raw).fetch("checks", [])
+doc = load_yaml(block)
+tier = doc["tier"] || pointer["tier"] || "T2"
+ac_checks = doc.fetch("checks", [])
 finish_path = File.join(ROOT, "finish", "#{tier}.yml")
 finish_checks = File.exist?(finish_path) ? load_yaml(File.read(finish_path)).fetch("checks", []) : []
 

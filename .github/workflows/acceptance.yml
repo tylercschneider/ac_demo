@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  issues: read
   pull-requests: write
 
 jobs:
@@ -29,14 +30,14 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      # Make origin/main available so the runner can fetch criteria from the hub.
-      - run: git fetch origin main --depth=1 || true
       - name: Prepare + seed the test database
         run: |
           RAILS_ENV=test bin/rails db:test:prepare
           RAILS_ENV=test bin/rails db:seed
       - name: Run finish-level + acceptance checks
         run: bin/acceptance
+        env:
+          GH_TOKEN: ${{ github.token }} # so the runner can read the request issue
 
       - name: Comment results on the PR
         if: always() && github.event_name == 'pull_request'

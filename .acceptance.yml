@@ -1,4 +1,3 @@
-# Pointer only — this is all a feature PR carries. The criteria themselves live
-# in the hub (hub/requests/invoice-export.yml on main), not here.
-request: invoice-export
-tier: T2
+# Points at the request ticket (a GitHub Issue). That's all the PR carries —
+# the acceptance criteria live in the issue, not in this repo.
+issue: 4
