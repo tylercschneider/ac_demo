@@ -10,6 +10,7 @@
 #                   NOT committed to this PR
 # Checks are data, not test files — each is an HTTP request + expectations the
 # runner interprets. Exits non-zero if any testable check is unmet (gates the PR).
+require "bundler/setup" # activate the bundled gem versions before anything else
 require "yaml"
 require "json"
 
