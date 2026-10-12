@@ -10,3 +10,15 @@
 /config/master.key
 /storage/*.sqlite3
 /storage/*.sqlite3-*
+
+# Logs and temporary files, as a new Rails app ignores them
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
