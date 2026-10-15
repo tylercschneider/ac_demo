@@ -1,5 +1,5 @@
 class Welcome
   def self.for(name)
-    "Welcome, #{name}"
+    "Welcome, #{name || "friend"}"
   end
 end
