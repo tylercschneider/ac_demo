@@ -8,4 +8,8 @@ class CheerTest < ActiveSupport::TestCase
   test "for cheers the team on when there is no name" do
     assert_equal "Go, team!", Cheer.for(nil)
   end
+
+  test "loud cheers a person on in capitals" do
+    assert_equal "GO, ADA!", Cheer.loud("Ada")
+  end
 end
