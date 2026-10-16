@@ -16,6 +16,11 @@ class InvoicesController < ApplicationController
               status: :ok
   end
 
+  def paid_total
+    total = @current_user.invoices.where(status: "paid").sum { |i| BigDecimal(i.amount.to_s) }
+    render json: { paid_total: total.to_s("F") }
+  end
+
   private
 
   def require_auth
