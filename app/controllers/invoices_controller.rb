@@ -18,12 +18,6 @@ class InvoicesController < ApplicationController
 
   private
 
-  def require_auth
-    token = request.headers["Authorization"].to_s[/\ABearer (.+)\z/, 1]
-    @current_user = User.find_by(api_token: token) if token
-    head :unauthorized unless @current_user
-  end
-
   def csv_escape(value)
     s = value.to_s
     s.match?(/[",\n]/) ? %("#{s.gsub('"', '""')}") : s
