@@ -16,6 +16,10 @@ class InvoicesController < ApplicationController
               status: :ok
   end
 
+  def overdue
+    render json: @current_user.invoices.order(:invoice_id).select(&:overdue?).map { |i| { invoice_id: i.invoice_id, date: i.date, amount: i.amount, status: i.status } }
+  end
+
   private
 
   def require_auth
