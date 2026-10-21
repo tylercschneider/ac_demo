@@ -14,4 +14,11 @@ class UserTest < ActiveSupport::TestCase
 
     assert_equal BigDecimal("150.75"), user.outstanding_balance
   end
+
+  test "a paid invoice is not counted in the customer's outstanding balance" do
+    user = User.create!(name: "Erin", api_token: "tok-erin")
+    user.invoices.create!(invoice_id: "INV-4001", date: "2026-04-01", amount: "75.00", status: "paid")
+
+    assert_equal 0, user.outstanding_balance
+  end
 end
