@@ -23,6 +23,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal BigDecimal("35.35"), user.outstanding_balance.to_d
   end
 
+  test "another user's unpaid invoice is not counted in the outstanding balance" do
+    user = User.create!(name: "Gina", api_token: "tok-gina")
+    other = User.create!(name: "Hal", api_token: "tok-hal")
+    other.invoices.create!(invoice_id: "INV-6001", date: "2026-03-01", amount: "99.00", status: "open")
+
+    assert_equal BigDecimal("0"), user.outstanding_balance.to_d
+  end
+
   test "a paid invoice is not counted in the outstanding balance" do
     user = User.create!(name: "Frank", api_token: "tok-frank")
     user.invoices.create!(invoice_id: "INV-5001", date: "2026-03-01", amount: "40.00", status: "paid")
