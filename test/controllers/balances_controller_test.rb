@@ -8,4 +8,11 @@ class BalancesControllerTest < ActionDispatch::IntegrationTest
     assert_match %r{\Aapplication/json}, response.media_type + ""
     assert_kind_of Hash, JSON.parse(response.body)
   end
+
+  test "request with no Authorization token gets 401 instead of a balance" do
+    get "/api/balance"
+
+    assert_response :unauthorized
+    assert_no_match(/outstanding_balance/, response.body)
+  end
 end
