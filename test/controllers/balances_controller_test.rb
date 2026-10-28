@@ -15,4 +15,11 @@ class BalancesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
     assert_no_match(/outstanding_balance/, response.body)
   end
+
+  test "request with an invalid token gets 401 instead of a balance" do
+    get "/api/balance", headers: { "Authorization" => "Bearer not-a-real-token" }
+
+    assert_response :unauthorized
+    assert_no_match(/outstanding_balance/, response.body)
+  end
 end
